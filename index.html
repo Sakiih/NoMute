@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NoMute — Kuasai Soft Skills, Kuasai Hidupmu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --ink: #0d0d0d;
+      --cream: #f5f0e8;
+      --warm: #f9f4ec;
+      --orange: #e8540a;
+      --orange-light: #f07040;
+      --gold: #c9a84c;
+      --muted: #7a7060;
+      --border: rgba(13,13,13,0.12);
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE OVERLAY ── */
+    body::before {
+      content:'';
+      position:fixed; inset:0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events:none; z-index:9999; opacity:.5;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top:0; left:0; right:0; z-index:100;
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 22px 60px;
+      background: rgba(245,240,232,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 900;
+      letter-spacing: -1px;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .logo span { color: var(--orange); }
+
+    .nav-links {
+      display:flex; gap:36px; list-style:none;
+    }
+
+    .nav-links a {
+      text-decoration:none; font-size:.85rem; font-weight:500;
+      color: var(--muted); letter-spacing:.5px;
+      text-transform: uppercase;
+      transition: color .2s;
+    }
+
+    .nav-links a:hover { color: var(--ink); }
+
+    .nav-cta {
+      background: var(--ink);
+      color: var(--cream) !important;
+      padding: 10px 22px;
+      border-radius: 2px;
+      font-size: .82rem !important;
+      letter-spacing: 1px !important;
+      transition: background .2s !important;
+    }
+
+    .nav-cta:hover { background: var(--orange) !important; color: white !important; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 120px 60px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg-circle {
+      position:absolute;
+      width: 620px; height: 620px;
+      background: radial-gradient(circle, rgba(232,84,10,0.12) 0%, transparent 70%);
+      right: -100px; top: 50%;
+      transform: translateY(-50%);
+      border-radius: 50%;
+      animation: pulse 6s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: translateY(-50%) scale(1); opacity:.8; }
+      50% { transform: translateY(-50%) scale(1.08); opacity:1; }
+    }
+
+    .hero-tag {
+      display: inline-flex; align-items: center; gap:8px;
+      background: rgba(232,84,10,.1);
+      border: 1px solid rgba(232,84,10,.3);
+      color: var(--orange);
+      font-size: .75rem; font-weight:600; letter-spacing:1.5px;
+      text-transform: uppercase;
+      padding: 6px 14px; border-radius:2px;
+      margin-bottom: 28px;
+      opacity:0; animation: fadeUp .7s .2s forwards;
+    }
+
+    .hero-tag::before {
+      content:''; width:6px; height:6px; border-radius:50%;
+      background: var(--orange);
+      animation: blink 1.5s ease-in-out infinite;
+    }
+
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 5vw, 5.2rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -2px;
+      margin-bottom: 24px;
+      opacity:0; animation: fadeUp .7s .35s forwards;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--orange);
+    }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 460px;
+      margin-bottom: 44px;
+      font-weight:300;
+      opacity:0; animation: fadeUp .7s .5s forwards;
+    }
+
+    .hero-actions {
+      display:flex; gap:16px; align-items:center;
+      opacity:0; animation: fadeUp .7s .65s forwards;
+    }
+
+    .btn-primary {
+      background: var(--orange);
+      color: #fff;
+      padding: 15px 32px;
+      font-size: .92rem; font-weight:600;
+      letter-spacing: .5px;
+      border: none; border-radius:2px; cursor:pointer;
+      text-decoration:none;
+      transition: background .2s, transform .2s;
+      display:inline-block;
+    }
+
+    .btn-primary:hover { background: #c94300; transform: translateY(-2px); }
+
+    .btn-outline {
+      color: var(--ink);
+      padding: 15px 32px;
+      font-size: .92rem; font-weight:500;
+      border: 1.5px solid var(--ink);
+      border-radius:2px; cursor:pointer;
+      text-decoration:none;
+      transition: all .2s;
+      display:inline-flex; align-items:center; gap:8px;
+    }
+
+    .btn-outline:hover { background: var(--ink); color: var(--cream); }
+
+    .hero-visual {
+      display:flex; justify-content:center; align-items:center;
+      position:relative;
+      opacity:0; animation: fadeRight .8s .4s forwards;
+    }
+
+    .hero-card-stack {
+      position: relative;
+      width: 340px; height: 420px;
+    }
+
+    .hcard {
+      position:absolute;
+      background: white;
+      border-radius: 8px;
+      padding: 28px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+    }
+
+    .hcard-1 {
+      width: 300px; bottom:0; left:50%; transform: translateX(-50%) rotate(-4deg);
+      background: var(--ink); color: var(--cream);
+    }
+
+    .hcard-2 {
+      width: 310px; bottom: 60px; left:50%; transform: translateX(-48%) rotate(2deg);
+      background: var(--gold); color: white;
+    }
+
+    .hcard-3 {
+      width: 320px; bottom: 120px; left:50%; transform: translateX(-50%) rotate(-1deg);
+      background: white;
+    }
+
+    .hcard-label {
+      font-size:.68rem; font-weight:600; letter-spacing:2px; text-transform:uppercase;
+      opacity:.6; margin-bottom: 10px;
+    }
+
+    .hcard-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem; font-weight:700;
+      line-height:1.3; margin-bottom:12px;
+    }
+
+    .hcard-meta { font-size:.78rem; opacity:.6; }
+
+    .hcard-pill {
+      display:inline-block;
+      background: rgba(232,84,10,.15); color: var(--orange);
+      font-size:.7rem; font-weight:600; letter-spacing:1px;
+      padding:4px 10px; border-radius:2px; margin-bottom:12px;
+    }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      background: var(--ink);
+      color: var(--cream);
+      padding: 36px 60px;
+      display:grid; grid-template-columns: repeat(4,1fr);
+      gap:0;
+      position: relative;
+      z-index:2;
+    }
+
+    .stat-item {
+      text-align:center;
+      border-right: 1px solid rgba(255,255,255,.1);
+      padding: 0 20px;
+      opacity:0;
+    }
+
+    .stat-item:last-child { border-right:none; }
+
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.6rem; font-weight:900;
+      color: var(--orange);
+      line-height:1;
+    }
+
+    .stat-label {
+      font-size: .75rem; letter-spacing:1px; text-transform:uppercase;
+      opacity:.5; margin-top:6px;
+    }
+
+    /* ── ABOUT ── */
+    .about-section {
+      padding: 120px 60px;
+      display:grid; grid-template-columns:1fr 1fr;
+      gap: 80px; align-items:center;
+    }
+
+    .section-eyebrow {
+      font-size:.72rem; font-weight:600; letter-spacing:3px; text-transform:uppercase;
+      color: var(--orange); margin-bottom:16px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem,3.5vw,3rem);
+      font-weight:900; line-height:1.1;
+      letter-spacing:-1px; margin-bottom:24px;
+    }
+
+    .section-body {
+      font-size:.98rem; color:var(--muted);
+      line-height:1.9; font-weight:300;
+      margin-bottom:20px;
+    }
+
+    .about-visual {
+      background: var(--ink);
+      border-radius:4px;
+      padding: 48px 40px;
+      position:relative; overflow:hidden;
+    }
+
+    .about-visual::before {
+      content:'';
+      position:absolute; right:-60px; top:-60px;
+      width:250px; height:250px;
+      border-radius:50%;
+      border: 40px solid rgba(232,84,10,.2);
+    }
+
+    .about-quote {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.7rem; font-weight:700; font-style:italic;
+      color: var(--cream); line-height:1.4;
+      position:relative; z-index:1;
+    }
+
+    .about-quote-attr {
+      margin-top:20px; font-size:.78rem;
+      color: rgba(245,240,232,.4); letter-spacing:1px;
+      text-transform:uppercase; font-weight:500;
+      position:relative; z-index:1;
+    }
+
+    /* ── COURSES ── */
+    .courses-section {
+      padding: 100px 60px;
+      background: var(--warm);
+    }
+
+    .courses-header {
+      display:flex; justify-content:space-between; align-items:flex-end;
+      margin-bottom: 56px;
+    }
+
+    .courses-grid {
+      display:grid; grid-template-columns: repeat(3,1fr);
+      gap:24px;
+    }
+
+    .course-card {
+      background: white;
+      border-radius:4px;
+      overflow:hidden;
+      transition: transform .3s, box-shadow .3s;
+      cursor:pointer;
+    }
+
+    .course-card:hover { transform: translateY(-8px); box-shadow: 0 24px 60px rgba(0,0,0,.12); }
+
+    .course-thumb {
+      height: 180px;
+      display:flex; align-items:flex-end;
+      padding:20px;
+      position:relative; overflow:hidden;
+    }
+
+    .course-thumb-icon {
+      font-size: 3rem; position:absolute; right:20px; top:20px; opacity:.3;
+    }
+
+    .course-badge {
+      background: rgba(255,255,255,.25);
+      backdrop-filter: blur(4px);
+      color:white; font-size:.68rem; font-weight:600;
+      letter-spacing:1.5px; text-transform:uppercase;
+      padding:4px 10px; border-radius:2px;
+    }
+
+    .course-body { padding: 24px; }
+
+    .course-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem; font-weight:700;
+      margin-bottom:10px; line-height:1.3;
+    }
+
+    .course-desc {
+      font-size:.82rem; color:var(--muted);
+      line-height:1.7; margin-bottom:20px;
+    }
+
+    .course-footer {
+      display:flex; justify-content:space-between; align-items:center;
+      border-top: 1px solid var(--border); padding-top:16px;
+    }
+
+    .course-price {
+      font-weight:700; font-size:1rem; color:var(--orange);
+    }
+
+    .course-level {
+      font-size:.72rem; font-weight:600; letter-spacing:1px;
+      text-transform:uppercase; color:var(--muted);
+    }
+
+    /* ── WHY NOMUTE ── */
+    .why-section {
+      padding: 120px 60px;
+      display:grid; grid-template-columns:1fr 1.2fr;
+      gap:80px; align-items:center;
+    }
+
+    .features-list { margin-top:40px; }
+
+    .feature-item {
+      display:flex; gap:20px;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .feature-item:last-child { border-bottom:none; }
+
+    .feature-num {
+      font-family: 'Playfair Display', serif;
+      font-size:1.8rem; font-weight:900;
+      color: rgba(13,13,13,.1); line-height:1;
+      min-width:48px;
+    }
+
+    .feature-content { flex:1; }
+
+    .feature-title {
+      font-size:.92rem; font-weight:600; margin-bottom:6px;
+    }
+
+    .feature-desc {
+      font-size:.82rem; color:var(--muted); line-height:1.7;
+    }
+
+    .why-visual {
+      display:grid; grid-template-columns:1fr 1fr;
+      gap:16px;
+    }
+
+    .why-box {
+      background: var(--ink);
+      border-radius:4px; padding:32px 24px;
+      color: var(--cream);
+      transition: transform .2s;
+    }
+
+    .why-box:hover { transform: scale(1.02); }
+
+    .why-box.light {
+      background: white;
+      border: 1px solid var(--border);
+      color: var(--ink);
+    }
+
+    .why-box.accent { background: var(--orange); color:white; }
+    .why-box.gold { background: var(--gold); color:white; }
+
+    .why-box-icon { font-size:2rem; margin-bottom:16px; }
+
+    .why-box-title {
+      font-family: 'Playfair Display', serif;
+      font-size:1.05rem; font-weight:700; line-height:1.3;
+    }
+
+    /* ── TESTIMONIALS ── */
+    .testi-section {
+      padding: 100px 60px;
+      background: var(--ink); color: var(--cream);
+      overflow:hidden;
+    }
+
+    .testi-header { margin-bottom:56px; }
+
+    .testi-header .section-eyebrow { color: var(--gold); }
+
+    .testi-header .section-title { color: var(--cream); }
+
+    .testi-grid {
+      display:grid; grid-template-columns:repeat(3,1fr);
+      gap:24px;
+    }
+
+    .testi-card {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius:4px; padding:32px;
+    }
+
+    .testi-stars { color:var(--gold); font-size:.9rem; margin-bottom:16px; }
+
+    .testi-text {
+      font-size:.9rem; line-height:1.8;
+      color: rgba(245,240,232,.75);
+      margin-bottom:24px;
+      font-style:italic;
+      font-family:'Playfair Display',serif;
+    }
+
+    .testi-author { display:flex; align-items:center; gap:12px; }
+
+    .testi-avatar {
+      width:40px; height:40px; border-radius:50%;
+      background: var(--orange);
+      display:flex; align-items:center; justify-content:center;
+      font-weight:700; font-size:.9rem;
+    }
+
+    .testi-name { font-size:.85rem; font-weight:600; }
+
+    .testi-role { font-size:.75rem; opacity:.4; }
+
+    /* ── CTA ── */
+    .cta-section {
+      padding: 120px 60px;
+      text-align:center; position:relative; overflow:hidden;
+    }
+
+    .cta-section::before {
+      content:'';
+      position:absolute; inset:0;
+      background: radial-gradient(ellipse at 50% 100%, rgba(232,84,10,.15) 0%, transparent 65%);
+    }
+
+    .cta-section .section-title { font-size: clamp(2.5rem,5vw,4.5rem); margin-bottom:20px; }
+
+    .cta-section .section-body { max-width:500px; margin:0 auto 44px; }
+
+    .cta-actions { display:flex; gap:16px; justify-content:center; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink); color: var(--cream);
+      padding: 60px 60px 36px;
+    }
+
+    .footer-top {
+      display:grid; grid-template-columns:2fr 1fr 1fr 1fr;
+      gap:40px; padding-bottom:40px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+
+    .footer-brand .logo { color: var(--cream); display:block; margin-bottom:12px; }
+
+    .footer-brand p { font-size:.82rem; color:rgba(245,240,232,.4); line-height:1.7; }
+
+    .footer-col h4 {
+      font-size:.7rem; font-weight:600; letter-spacing:2px; text-transform:uppercase;
+      color: rgba(245,240,232,.35); margin-bottom:20px;
+    }
+
+    .footer-col ul { list-style:none; }
+
+    .footer-col ul li { margin-bottom:10px; }
+
+    .footer-col ul a {
+      text-decoration:none; font-size:.82rem;
+      color: rgba(245,240,232,.55); transition:color .2s;
+    }
+
+    .footer-col ul a:hover { color: var(--cream); }
+
+    .footer-bottom {
+      padding-top:28px; display:flex; justify-content:space-between; align-items:center;
+    }
+
+    .footer-bottom p { font-size:.75rem; color:rgba(245,240,232,.25); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(24px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    @keyframes fadeRight {
+      from { opacity:0; transform:translateX(30px); }
+      to   { opacity:1; transform:translateX(0); }
+    }
+
+    .reveal {
+      opacity:0; transform:translateY(28px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+
+    .reveal.visible { opacity:1; transform:translateY(0); }
+
+    /* ── MOBILE NAV ── */
+    .menu-toggle { display:none; }
+
+    @media(max-width:900px) {
+      nav { padding:18px 24px; }
+
+      .nav-links { display:none; }
+
+      .hero { grid-template-columns:1fr; padding:100px 24px 60px; }
+
+      .hero-visual { display:none; }
+
+      .stats-bar { grid-template-columns:1fr 1fr; gap:24px; padding:40px 24px; }
+
+      .about-section, .why-section { grid-template-columns:1fr; padding:80px 24px; gap:40px; }
+
+      .courses-section { padding:80px 24px; }
+
+      .courses-header { flex-direction:column; align-items:flex-start; gap:16px; }
+
+      .courses-grid { grid-template-columns:1fr; }
+
+      .testi-section { padding:80px 24px; }
+
+      .testi-grid { grid-template-columns:1fr; }
+
+      .why-visual { grid-template-columns:1fr 1fr; }
+
+      .cta-section { padding:80px 24px; }
+
+      .cta-actions { flex-direction:column; align-items:center; }
+
+      footer { padding:40px 24px 24px; }
+
+      .footer-top { grid-template-columns:1fr 1fr; }
+
+      .footer-bottom { flex-direction:column; gap:8px; text-align:center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="logo">No<span>Mute</span></a>
+    <ul class="nav-links">
+      <li><a href="#tentang">Tentang</a></li>
+      <li><a href="#kursus">Kursus</a></li>
+      <li><a href="#keunggulan">Keunggulan</a></li>
+      <li><a href="#testimoni">Testimoni</a></li>
+      <li><a href="#mulai" class="nav-cta">Mulai Gratis</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="beranda">
+    <div class="hero-bg-circle"></div>
+    <div class="hero-content">
+      <div class="hero-tag">🇮🇩 Satu-satunya di Indonesia</div>
+      <h1 class="hero-title">
+        Kuasai <em>Soft Skills,</em><br>Kuasai Hidupmu
+      </h1>
+      <p class="hero-sub">
+        Platform pembelajaran soft skills terstruktur pertama di Indonesia — dari public speaking hingga kepemimpinan, belajar mandiri, fleksibel, dan komunitas yang aktif mendukungmu.
+      </p>
+      <div class="hero-actions">
+        <a href="#kursus" class="btn-primary">Jelajahi Kursus →</a>
+        <a href="#tentang" class="btn-outline">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+          Lihat Demo
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hero-card-stack">
+        <div class="hcard hcard-1">
+          <div class="hcard-label">Track Terbaru</div>
+          <div class="hcard-title">Kepemimpinan Adaptif di Era Modern</div>
+          <div class="hcard-meta">12 Modul · 4.5 Jam</div>
+        </div>
+        <div class="hcard hcard-2">
+          <div class="hcard-label">Populer</div>
+          <div class="hcard-title">Teknik Negosiasi Tingkat Lanjut</div>
+          <div class="hcard-meta">8 Modul · 3 Jam</div>
+        </div>
+        <div class="hcard hcard-3">
+          <div class="hcard-pill">⭐ Rating 4.9</div>
+          <div class="hcard-title">Public Speaking: Dari Takut ke Percaya Diri</div>
+          <div class="hcard-meta">✓ 2.400+ peserta · Sertifikat resmi</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stat-item reveal">
+      <div class="stat-num">12K+</div>
+      <div class="stat-label">Peserta Aktif</div>
+    </div>
+    <div class="stat-item reveal">
+      <div class="stat-num">40+</div>
+      <div class="stat-label">Modul Kursus</div>
+    </div>
+    <div class="stat-item reveal">
+      <div class="stat-num">98%</div>
+      <div class="stat-label">Kepuasan Peserta</div>
+    </div>
+    <div class="stat-item reveal">
+      <div class="stat-num">#1</div>
+      <div class="stat-label">Soft Skills Indonesia</div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section class="about-section" id="tentang">
+    <div class="reveal">
+      <div class="section-eyebrow">Tentang NoMute</div>
+      <h2 class="section-title">Lebih dari Sekadar Kursus Online</h2>
+      <p class="section-body">
+        NoMute lahir dari keyakinan bahwa soft skills adalah fondasi karier dan kehidupan. Kami membangun kurikulum yang sistematis dan terstruktur — bukan sekadar video tutorial acak.
+      </p>
+      <p class="section-body">
+        Bergabung dengan komunitas diskusi aktif, dapatkan feedback nyata, dan belajar dengan ritme kamu sendiri. Karena setiap orang punya perjalanannya masing-masing.
+      </p>
+      <a href="#kursus" class="btn-primary" style="margin-top:8px;">Lihat Semua Kursus</a>
+    </div>
+    <div class="about-visual reveal">
+      <div class="about-quote">
+        "Soft skills bukan bakat lahir. Ia adalah keterampilan yang bisa dipelajari, dilatih, dan dikuasai."
+      </div>
+      <div class="about-quote-attr">— Filosofi NoMute</div>
+    </div>
+  </section>
+
+  <!-- COURSES -->
+  <section class="courses-section" id="kursus">
+    <div class="courses-header reveal">
+      <div>
+        <div class="section-eyebrow">Kursus Unggulan</div>
+        <h2 class="section-title">Pilihan Jalur Belajarmu</h2>
+      </div>
+      <a href="#" class="btn-outline">Semua Kursus →</a>
+    </div>
+
+    <div class="courses-grid">
+      <div class="course-card reveal">
+        <div class="course-thumb" style="background:linear-gradient(135deg,#e8540a,#c94300);">
+          <span class="course-thumb-icon">🎤</span>
+          <span class="course-badge">Terlaris</span>
+        </div>
+        <div class="course-body">
+          <div class="course-title">Public Speaking Mastery</div>
+          <div class="course-desc">Kuasai seni berbicara di depan umum — dari mengelola kecemasan hingga memukau audiens dengan teknik storytelling.</div>
+          <div class="course-footer">
+            <span class="course-price">Rp 149.000</span>
+            <span class="course-level">Pemula – Lanjutan</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="course-card reveal">
+        <div class="course-thumb" style="background:linear-gradient(135deg,#1a1a2e,#16213e);">
+          <span class="course-thumb-icon">👑</span>
+          <span class="course-badge">Baru</span>
+        </div>
+        <div class="course-body">
+          <div class="course-title">Leadership & People Management</div>
+          <div class="course-desc">Pelajari cara memimpin tim, mengelola konflik, dan membangun budaya kerja yang positif dan produktif.</div>
+          <div class="course-footer">
+            <span class="course-price">Rp 199.000</span>
+            <span class="course-level">Menengah</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="course-card reveal">
+        <div class="course-thumb" style="background:linear-gradient(135deg,#c9a84c,#a07830);">
+          <span class="course-thumb-icon">🤝</span>
+          <span class="course-badge">Populer</span>
+        </div>
+        <div class="course-body">
+          <div class="course-title">Negosiasi & Persuasi Efektif</div>
+          <div class="course-desc">Teknik negosiasi berbasis psikologi untuk situasi profesional — dari interview kerja hingga closing deal bisnis.</div>
+          <div class="course-footer">
+            <span class="course-price">Rp 129.000</span>
+            <span class="course-level">Semua Level</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="course-card reveal">
+        <div class="course-thumb" style="background:linear-gradient(135deg,#2d6a4f,#1b4332);">
+          <span class="course-thumb-icon">💬</span>
+          <span class="course-badge">Pilihan Editor</span>
+        </div>
+        <div class="course-body">
+          <div class="course-title">Komunikasi Interpersonal</div>
+          <div class="course-desc">Bangun hubungan yang bermakna di tempat kerja dan kehidupan pribadi melalui komunikasi yang empatik dan asertif.</div>
+          <div class="course-footer">
+            <span class="course-price">Rp 99.000</span>
+            <span class="course-level">Pemula</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="course-card reveal">
+        <div class="course-thumb" style="background:linear-gradient(135deg,#4a0e8f,#2d0c6b);">
+          <span class="course-thumb-icon">🧠</span>
+          <span class="course-badge">Trending</span>
+        </div>
+        <div class="course-body">
+          <div class="course-title">Critical Thinking & Problem Solving</div>
+          <div class="course-desc">Asah kemampuan berpikir analitis dan pengambilan keputusan dalam situasi kompleks dan penuh ketidakpastian.</div>
+          <div class="course-footer">
+            <span class="course-price">Rp 159.000</span>
+            <span class="course-level">Menengah</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="course-card reveal">
+        <div class="course-thumb" style="background:linear-gradient(135deg,#0d4f6e,#083d56);">
+          <span class="course-thumb-icon">⚡</span>
+          <span class="course-badge">Eksklusif</span>
+        </div>
+        <div class="course-body">
+          <div class="course-title">Manajemen Waktu & Produktivitas</div>
+          <div class="course-desc">Sistem produktivitas yang terbukti untuk profesional Indonesia — lebih banyak hasil, lebih sedikit stres.</div>
+          <div class="course-footer">
+            <span class="course-price">Rp 89.000</span>
+            <span class="course-level">Semua Level</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY NOMUTE -->
+  <section class="why-section" id="keunggulan">
+    <div class="reveal">
+      <div class="section-eyebrow">Mengapa NoMute?</div>
+      <h2 class="section-title">Dirancang Serius untuk Hasil Nyata</h2>
+      <p class="section-body">NoMute bukan sekedar koleksi video. Kami membangun pengalaman belajar yang komprehensif.</p>
+      <div class="features-list">
+        <div class="feature-item">
+          <div class="feature-num">01</div>
+          <div class="feature-content">
+            <div class="feature-title">Kurikulum Terstruktur & Berjenjang</div>
+            <div class="feature-desc">Setiap kursus dirancang dengan alur pembelajaran progresif — dari fondasi hingga mahir, secara logis dan sistematis.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-num">02</div>
+          <div class="feature-content">
+            <div class="feature-title">Belajar Mandiri, Kapan Saja</div>
+            <div class="feature-desc">Tidak ada jadwal kelas. Akses seumur hidup, belajar sesuai ritme dan waktu luangmu sendiri.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-num">03</div>
+          <div class="feature-content">
+            <div class="feature-title">Komunitas Diskusi Aktif</div>
+            <div class="feature-desc">Terhubung dengan ribuan peserta, berbagi pengalaman, dan dapatkan feedback langsung dari mentor dan sesama pelajar.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-num">04</div>
+          <div class="feature-content">
+            <div class="feature-title">Harga Terjangkau, Kualitas Premium</div>
+            <div class="feature-desc">Investasi terbaik untuk kariermu tanpa menguras kantong. Kursus berkualitas internasional dengan harga lokal Indonesia.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="why-visual reveal">
+      <div class="why-box">
+        <div class="why-box-icon">🎯</div>
+        <div class="why-box-title">Fokus 100% pada Soft Skills</div>
+      </div>
+      <div class="why-box accent">
+        <div class="why-box-icon">🏆</div>
+        <div class="why-box-title">Sertifikat Diakui Industri</div>
+      </div>
+      <div class="why-box gold">
+        <div class="why-box-icon">👥</div>
+        <div class="why-box-title">Komunitas 12.000+ Member</div>
+      </div>
+      <div class="why-box light">
+        <div class="why-box-icon">📱</div>
+        <div class="why-box-title">Akses Multi-Device & Offline</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testi-section" id="testimoni">
+    <div class="testi-header reveal">
+      <div class="section-eyebrow">Testimoni</div>
+      <h2 class="section-title">Cerita Nyata dari Komunitas Kami</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card reveal">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">"Setelah ikut Public Speaking Mastery di NoMute, saya berhasil presentasi di depan 200 orang tanpa gemetar. Kurikulumnya benar-benar terstruktur dan praktis banget."</div>
+        <div class="testi-author">
+          <div class="testi-avatar">AR</div>
+          <div>
+            <div class="testi-name">Andi Rachmat</div>
+            <div class="testi-role">Marketing Manager, Jakarta</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">"Yang bikin NoMute beda itu komunitasnya. Bisa diskusi langsung, dapet feedback, dan merasa ga belajar sendirian. Investasi terbaik tahun ini."</div>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:var(--gold);">DS</div>
+          <div>
+            <div class="testi-name">Dina Sari</div>
+            <div class="testi-role">HR Specialist, Surabaya</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">"Harganya terjangkau tapi kualitasnya ga kalah sama kursus mahal. Saya sudah selesai 3 kursus dan sekarang naik jabatan jadi team lead. Terima kasih NoMute!"</div>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:#2d6a4f;">BW</div>
+          <div>
+            <div class="testi-name">Budi Wijaya</div>
+            <div class="testi-role">Team Lead, Bandung</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section" id="mulai">
+    <div class="section-eyebrow reveal">Mulai Sekarang</div>
+    <h2 class="section-title reveal">Siap Jadi Versi<br><em>Terbaik</em> Dirimu?</h2>
+    <p class="section-body reveal">Bergabung dengan 12.000+ profesional Indonesia yang telah mengembangkan soft skills mereka bersama NoMute. Tidak perlu kartu kredit.</p>
+    <div class="cta-actions reveal">
+      <a href="#" class="btn-primary">Daftar Gratis Sekarang →</a>
+      <a href="#kursus" class="btn-outline">Lihat Semua Kursus</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#" class="logo">No<span style="color:var(--orange)">Mute</span></a>
+        <p>Satu-satunya platform di Indonesia yang menyediakan kurikulum soft skills terstruktur. Dari public speaking hingga kepemimpinan — semua ada di sini.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="#">Semua Kursus</a></li>
+          <li><a href="#">Jalur Belajar</a></li>
+          <li><a href="#">Sertifikasi</a></li>
+          <li><a href="#">Komunitas</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Perusahaan</h4>
+        <ul>
+          <li><a href="#">Tentang Kami</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Karier</a></li>
+          <li><a href="#">Kontak</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Syarat & Ketentuan</a></li>
+          <li><a href="#">Kebijakan Privasi</a></li>
+          <li><a href="#">Kebijakan Refund</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 NoMute. Semua hak dilindungi undang-undang.</p>
+      <p>🇮🇩 Dibuat dengan ❤️ di Indonesia</p>
+    </div>
+  </footer>
+
+  <script>
+    // Intersection Observer for reveal animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, (entry.target.dataset.delay || 0) * 100);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach((el, i) => {
+      el.dataset.delay = i % 4;
+      observer.observe(el);
+    });
+
+    // Counter animation for stats
+    function animateCounter(el, target, suffix='') {
+      let start = 0;
+      const duration = 1800;
+      const step = timestamp => {
+        if (!start) start = timestamp;
+        const progress = Math.min((timestamp - start) / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.floor(ease * target) + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }
+
+    const statsObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const nums = entry.target.querySelectorAll('.stat-num');
+          nums[0] && animateCounter(nums[0], 12, 'K+');
+          nums[1] && animateCounter(nums[1], 40, '+');
+          nums[2] && animateCounter(nums[2], 98, '%');
+          nums[3] && (nums[3].textContent = '#1');
+          entry.target.querySelectorAll('.stat-item').forEach((el,i) => {
+            setTimeout(() => el.style.opacity='1', i*120);
+          });
+          statsObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    const statsBar = document.querySelector('.stats-bar');
+    if (statsBar) statsObserver.observe(statsBar);
+
+    // Smooth active nav highlight
+    const sections = document.querySelectorAll('section[id], div[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        if (window.scrollY >= section.offsetTop - 100) current = section.id;
+      });
+      navLinks.forEach(link => {
+        link.style.color = '';
+        if (link.getAttribute('href') === '#' + current) {
+          link.style.color = 'var(--ink)';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
